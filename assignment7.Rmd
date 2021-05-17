@@ -171,6 +171,24 @@ sens_rabbit$T
 
 # graph the most sensitive parameter
 tmp = cbind.data.frame(sens_rabbit$X, pop1=sens_rabbit$y)
-ggplot(tmp, aes(p1, pop1))+geom_point()+labs(x="Survivability of Young & Sub-Adults",y="pop after 20 years")
+#plot p1
+ggplot(tmp, aes(p1, pop1))+geom_point()+labs(x="Survivability of Young ",y="Pop after 20 years")
+
+#plot p2
+ggplot(tmp, aes(p2, pop1))+geom_point()+labs(x="Survivability of Sub-Adults ",y="Pop after 20 years")
+
+#total populations at each sensitivity level
+#p1
+tmp_p1_avg <- tmp %>%
+  mutate(p1 = round(p1, digits = 2)) %>% 
+  group_by(p1) %>% 
+  summarise(pop = mean(pop1))
+
+#p2
+tmp_p2_avg <- tmp %>%
+  mutate(p2 = round(p2, digits = 2)) %>% 
+  group_by(p2) %>% 
+  summarise(pop = mean(pop1))
+  
 
 ```
