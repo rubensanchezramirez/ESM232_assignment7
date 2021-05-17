@@ -1,0 +1,98 @@
+---
+title: "Untitled"
+author: "Ruben Sanchez Ramirez"
+date: "5/17/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+```
+
+```{r}
+
+# Attach packages:
+library(tidyverse)
+library(sensitivity)
+library(ggplot2)
+
+```
+
+Rabbits and Hawks
+Population Matrix Assignment
+
+A small city with a large urban park has decided to introduce a rare species of rabbits into this park - Rabbits are cute and the kids love them, and giving a rare species a new home sounds like a good idea. The urban park manager is concerned about how this rabbit population might grow over the next few decades. Rabbits have no natural predators in the region where the park is situated. The manager would like to know, approximately, how many rabbits there will be 20 years from now if the rabbits are introduced as planned. The manager reviewed the literature and found the following estimates for survival and fertility rates for the rare rabbit population, for 4 different age classes. The estimates for these rates are shown below
+
+Fertility (rabbit/female) - Survivability
+
+Young (Age 0-1) - 0 - 0.8
+Sub-Adults (Age 1-2) - 2 - 0.85
+Adult (Age 2-3) - 6 - 0.65
+Aged (Age 3-4) - 1 - 0.1
+
+Using a matrix population model approach answer the following questions for the manager:
+Assume that we start with 10 adults rabbits.
+What is the total rabbit population after 20 years.
+How many young rabbits (first age class) are there in the population at that time?
+
+```{r}
+
+nclasses = 4
+
+# create a growth matrix to store fertility and survivability information
+gmatrix=matrix(nrow=nclasses, ncol=nclasses)
+
+# change NAs to zero
+gmatrix[]=0.0
+
+# assign values for fertility for each of the age classes 
+# notes that fertility rates are births per capita (number in class) per
+# time step - time step here is years 
+fert =  c(0,2,6,1)
+
+# enter into our matrix
+gmatrix[1,]=fert
+ 
+# now add survivability 
+# survivability (to the next class) is also per time step
+gmatrix[2,1]=0.8
+gmatrix[3,2]=0.85
+gmatrix[4,3]=0.65
+
+# we als want to to account for the oldest population group - they don't transfer to another group
+# but they do die - this will be survivability per time step but they just stay in their class/group
+gmatrix[4,4]=0.1
+gmatrix
+
+```
+
+
+```{r}
+
+source("./evolve_pop.R")
+
+# initial population parameters
+ini = c(0,0,10,0)
+nyears = 20
+fert_rabbit = c(0,2,6,1)
+surv_rabbit = c(0.8,0.85,0.65,0.1)
+rabbit_pop=evolve_pop(fert_rabbit, surv_rabbit, ini, nyears)
+
+tail(rabbit_pop)
+
+# graph differnt components of the output
+# total population
+
+# add year
+year = seq(from=1, to=nyears)
+rabbit_tot = cbind.data.frame(year=year, poptot=rabbit_pop$poptot)
+ggplot(rabbit_tot, aes(year, poptot))+geom_col()+labs(y="Total Popultation")
+
+
+# plot information about ages
+rabbit_ages = cbind.data.frame(year=year, t(rabbit_pop$popbyage))
+rabbit_agesl = rabbit_ages %>% gather(key="agecat", value="pop",-year)
+ggplot(rabbit_agesl, aes(year, pop, fill=agecat))+geom_col()+labs(y="Population", fill="Age Group")
+
+```
