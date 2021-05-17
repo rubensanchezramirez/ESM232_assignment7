@@ -87,7 +87,7 @@ tail(rabbit_pop)
 # add year
 year = seq(from=1, to=nyears)
 rabbit_tot = cbind.data.frame(year=year, poptot=rabbit_pop$poptot)
-ggplot(rabbit_tot, aes(year, poptot))+geom_col()+labs(y="Total Popultation")
+ggplot(rabbit_tot, aes(year, poptot))+geom_col()+labs(y="Total Population")
 
 
 # plot information about ages
@@ -108,7 +108,7 @@ nsample=200
 ps1 = cbind.data.frame(p1=runif(min=0.65, max=0.75, n=nsample), 
                        p2 = runif(min=0.75, max=0.80, n=nsample),
                        p3 = rep(0.65, n=nsample),
-                       p4 = rep(0.65, n=nsample))
+                       p4 = rep(0.1, n=nsample))
 
 ps2 = cbind.data.frame(p1=runif(min=0.65, max=0.75, n=nsample), 
                        p2 = runif(min=0.75, max=0.80, n=nsample),
