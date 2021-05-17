@@ -98,7 +98,6 @@ ggplot(rabbit_agesl, aes(year, pop, fill=agecat))+geom_col()+labs(y="Population"
 ```
 
 ```{r}
-
 library(sensitivity)
 
 # survivability - based on mortality rates per thousand per decade
@@ -107,10 +106,14 @@ nsample=200
 # create our two samples for Sobel
 # first do our survivability
 ps1 = cbind.data.frame(p1=runif(min=0.65, max=0.75, n=nsample), 
-                       p2 = runif(min=0.75, max=0.80, n=nsample))
+                       p2 = runif(min=0.75, max=0.80, n=nsample),
+                       p3 = rep(0.65, n=nsample),
+                       p4 = rep(0.65, n=nsample))
 
 ps2 = cbind.data.frame(p1=runif(min=0.65, max=0.75, n=nsample), 
-                       p2 = runif(min=0.75, max=0.80, n=nsample))
+                       p2 = runif(min=0.75, max=0.80, n=nsample),
+                       p3 = rep(0.65, n=nsample),
+                       p4 = rep(0.1, n=nsample))
 
 # get sobel samples
 sens_rabbit=soboljansen(model = NULL, ps1, ps2, nboot = 100)
@@ -119,8 +122,8 @@ head(sens_rabbit$X)
 nsim=nrow(sens_rabbit$X)
 
 # Survivability
-p3 = 0.65
-p4 = 0.1
+#p3 = 0.65
+#p4 = 0.1
 
 # Fertility
 f1 = 0
@@ -148,15 +151,15 @@ return(finalpop=res$poptot[nstep])
 
 
 # use pmap here so we can specify rows of our sensitivity analysis parameter object 
-res = as.data.frame(sens_rabbit$X) %>% pmap_dbl(p_wrapper, initialpop=ini, nstep=nyears, use_func=evolve_pop, p3=p3,p4=p4,f1=f1,f2=f2,f3=f3)
+res = as.data.frame(sens_rabbit$X) %>% pmap_dbl(p_wrapper, initialpop=ini, nstep=nyears, use_func=evolve_pop,f1=f1,f2=f2,f3=f3)
          
 # plot results (variation in final population across all parameter)
 # ggplot needs a dataframe - so do a quick conversion with data.frame
 ggplot(data.frame(finalpop=res), aes(x=finalpop))+geom_density()
 
 # or a boxplot
-ggplot(data.frame(finalpop=res), aes(x="", y=finalpop/1000) )+geom_boxplot(fill="blue")+
-  theme(axis.title.x = element_blank())+labs(y="Final Pop (in 1000s)")
+ggplot(data.frame(finalpop=res), aes(x="", y=finalpop) )+geom_boxplot(fill="blue")+
+  theme(axis.title.x = element_blank())+labs(y="Final Pop")
 
 # give our results to sensitivity structure
 
