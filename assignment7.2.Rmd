@@ -48,7 +48,7 @@ gmatrix=matrix(nrow=nclasses, ncol=nclasses)
 gmatrix[]=0.0
 
 # assign values for fertility for each of the age classes 
-# notes that fertility rates are births per capita (number in class) per
+# note that fertility rates are births per capita (number in class) per
 # time step - time step here is years 
 fert =  c(0,2,6,1)
 
@@ -61,7 +61,7 @@ gmatrix[2,1]=0.8
 gmatrix[3,2]=0.85
 gmatrix[4,3]=0.65
 
-# we als want to to account for the oldest population group - they don't transfer to another group
+# we also want to to account for the oldest population group - they don't transfer to another group
 # but they do die - this will be survivability per time step but they just stay in their class/group
 gmatrix[4,4]=0.1
 
@@ -72,7 +72,6 @@ gmatrix[4,4]=0.1
 
 
 ```{r}
-
 source("./R/evolve_pop.R")
 
 # initial population parameters
@@ -334,7 +333,7 @@ A sensitivity analysis on the survivability of Young Age and Sub-Adults age clas
 
 **Variation in total rabbit population.**
 
-![<br />_**Figure 2:** Population of rabbits after 20 years of growth with no predation. **(A)** The density of total population values for our sobol sensitivity analysis output values. **(B)** Total population after 20 years box plot. Mean and distribution of our sobol sensitivity analysis output values. _<br />](figures/plot.4.png)
+![<br />_**Figure 2:** Population of rabbits after 20 years of growth with hawk predation. **(A)** The density of total population values for our sobol sensitivity analysis output values. **(B)** Total population after 20 years box plot. Mean and distribution of our sobol sensitivity analysis output values. _<br />](figures/plot.4.png)
 
 ***
 
@@ -347,5 +346,7 @@ A sensitivity analysis on the survivability of Young Age and Sub-Adults age clas
 #### **Disscusion:**
 
 How does this compare with total rabbit population after 20 years in your original population model (without the hawk related change to survivability)?
+
+The total rabbit population after 20 years in our original population model was 6,802,153 rabbits. With hawk predation resulting in reduced survivability for the two younger age classes, our sensitivity analysis showed that the population after 20 years does not increase above 4 million. The population sensitivity analysis based on survivability of the youngest age class had much less variation than the sensitivity analysis based on survivability of the second youngest age class. This is likely because the youngest age class cannot reproduce, therefore, there its survivability contributes less to the variation in the total population.
 
 ***
